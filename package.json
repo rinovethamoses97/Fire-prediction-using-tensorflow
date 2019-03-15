@@ -1,0 +1,18 @@
+{
+  "name": "tensorflow",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "rino",
+  "license": "ISC",
+  "dependencies": {
+    "@tensorflow/tfjs": "^1.0.1",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "papaparse": "^4.6.3",
+    "xmlhttprequest": "^1.8.0"
+  }
+}
