@@ -30,7 +30,7 @@ var testdatay=[];
 var dataset;
 async function parsingComplete(result,file){
     dataset=result.data;
-	await train();
+	// await train();
 	test();
 }
 function readCSV(){
