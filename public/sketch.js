@@ -28,9 +28,9 @@ var trainingdatay=[];
 var testdatax=[];
 var testdatay=[];
 var dataset;
-function parsingComplete(result,file){
+async function parsingComplete(result,file){
     dataset=result.data;
-	// train();
+	await train();
 	test();
 }
 function readCSV(){
@@ -64,11 +64,11 @@ async function train(){
     model.compile({loss:"meanSquaredError",optimizer:"rmsprop"});
     var trainx=tf.tensor2d(trainingdatax);
     var trainy=tf.tensor2d(trainingdatay);
-    await model.fit(trainx,trainy,{epochs:1000,shuffle:true,callbacks:{onEpochEnd:(epochs,logs)=>{
+    await model.fit(trainx,trainy,{epochs:10,shuffle:true,callbacks:{onEpochEnd:(epochs,logs)=>{
         console.log("Epoch ="+epochs+" Loss="+logs.loss);
     }}});
     console.log("Training Completed");
-    model.save('downloads://my-model');
+    // model.save('downloads://my-model');
 }
 async function loadModel(){
 	model=await tf.loadLayersModel('my-model.json');
