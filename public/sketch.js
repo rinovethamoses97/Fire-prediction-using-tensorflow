@@ -55,7 +55,7 @@ async function train(){
 		else if(dataset[i][4]==="no"){
 			trainingdatay.push([0,0,0,1]);
 		}
-    };
+	};
     model=tf.sequential();
     model.add(tf.layers.dense({units:6,activation:"sigmoid",inputShape:[3]}));
     model.add(tf.layers.dense({units:6,activation:"sigmoid"}));
@@ -69,12 +69,26 @@ async function train(){
     console.log("Training Completed");
     model.save('downloads://my-model');
 }
-async function predict(){
-    model=await tf.loadLayersModel('my-model.json');
-    var x=tf.tensor2d([[29/40,75/80,538/600]]);
-    var x1=tf.tensor2d([[40/40,75/80,252/600]]);
-    model.predict(x1).print()
-
+async function loadModel(){
+	model=await tf.loadLayersModel('my-model.json');
+	console.log("Model loaded");
+}
+function predict(){
+	var temp=document.getElementById("temp").value;
+	var humidity=document.getElementById("humidity").value;
+	var smoke=document.getElementById("smoke").value;
+	var data=[];
+	data[0]=parseInt(temp)/40;
+	data[1]=parseInt(humidity)/80;
+	data[2]=parseInt(smoke)/600;
+	var x=tf.tensor2d([data]);
+	var result=model.predict(x);
+	result.print();
+	var indextensor=result.argMax(1);
+	var index=indextensor.dataSync()[0];
+	var indexLabel=["critical","severe","mild","no"];
+	document.getElementById("result").innerHTML=indexLabel[index];
 }
 // readCSV();
-predict();
+loadModel();
+
