@@ -30,7 +30,8 @@ var testdatay=[];
 var dataset;
 function parsingComplete(result,file){
     dataset=result.data;
-    train();
+	// train();
+	test();
 }
 function readCSV(){
     Papa.parse("Book.csv",config);   
@@ -72,6 +73,7 @@ async function train(){
 async function loadModel(){
 	model=await tf.loadLayersModel('my-model.json');
 	console.log("Model loaded");
+	readCSV();
 }
 function predict(){
 	var temp=document.getElementById("temp").value;
@@ -88,7 +90,28 @@ function predict(){
 	var index=indextensor.dataSync()[0];
 	var indexLabel=["critical","severe","mild","no"];
 	document.getElementById("result").innerHTML=indexLabel[index];
+	return indexLabel[index];
 }
-// readCSV();
+function test(){
+	var totalCouunt=0;
+	var correct=0;
+	for(var i=8500;i<dataset.length;i++){
+		totalCouunt++;
+		var row=[];
+        row[0]=parseInt(dataset[i][0])/40;
+        row[1]=parseInt(dataset[i][1])/80;
+		row[2]=parseInt(dataset[i][3])/600;
+		var x=tf.tensor2d([row]);
+		var result=model.predict(x);
+		var indextensor=result.argMax(1);
+		var index=indextensor.dataSync()[0];
+		var indexLabel=["critical","severe","mild","no"];
+		if(indexLabel[index]===dataset[i][4]){
+			correct++;
+		}
+
+	}
+	console.log("Accuracy= "+((correct/totalCouunt)*100));
+}
 loadModel();
 
